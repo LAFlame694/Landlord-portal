@@ -1,0 +1,68 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      Welcome, {{ request.user.get_full_name|default:request.user.username }}!
+    </div>
+    <div class="card-body">
+      <!-- Summary Tiles (using Bootstrap grid) -->
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="card text-center border-success mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Total Tenants</h5>
+              <p class="card-text display-4">{{ tenants|length }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center border-info mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Total Apartments</h5>
+              <p class="card-text display-4">{{ apartments|length }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center border-warning mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Pending Invoices</h5>
+              <p class="card-text display-4">{{ pending_invoices|length }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <h4>Recent Invoices</h4>
+      <ul class="list-group mb-4">
+        {% for invoice in invoices|slice:":5" %}
+        <li class="list-group-item">
+          {{ invoice.tenant.user.get_full_name }} - {{ invoice.description }} -
+          {{ invoice.amount }} - {% if invoice.is_paid %}<span
+            class="badge bg-success"
+            >Paid</span
+          >{% else %}<span class="badge bg-warning text-dark">Unpaid</span>{%
+          endif %}
+        </li>
+        {% empty %}
+        <li class="list-group-item">No invoices found.</li>
+        {% endfor %}
+      </ul>
+
+      <!-- Quick Actions -->
+      <div class="mb-3">
+        <a
+          href="{% url 'admin:portal_tenantprofile_add' %}"
+          class="btn btn-success"
+          >+ Add New Tenant</a
+        >
+        <a href="{% url 'admin:portal_apartment_add' %}" class="btn btn-primary"
+          >+ Add Apartment</a
+        >
+        <a href="{% url 'admin:portal_invoice_add' %}" class="btn btn-warning"
+          >+ Create Invoice</a
+        >
+      </div>
+    </div>
+  </div>
+</div>

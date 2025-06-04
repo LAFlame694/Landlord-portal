@@ -1,0 +1,34 @@
+{% extends "portal/base.html" %}
+{% block title %}Apartments - SunSet Apartment{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+  <div class="card-header bg-dark text-white">
+    <h4 class="mb-0"><i class="fa-solid fa-building"></i> Apartments List</h4>
+  </div>
+  <div class="card-body">
+    {% if apartments %}
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for apartment in apartments %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ apartment.name }}</td>
+          <td>{{ apartment.address }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No apartments found.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tenant Dashboard</title>
+  </head>
+  <body>
+    <h1>
+      Welcome, {{
+      tenant_profile.user.get_full_name|default:tenant_profile.user.username }}!
+    </h1>
+    <h2>Your BedSitter: {{ tenant_profile.bedsitter }}</h2>
+
+    <h3>Current Invoices</h3>
+    <ul>
+      {% for invoice in invoices %}
+      <li>
+        {{ invoice.description }} - Amount: {{ invoice.amount }} - Due: {{
+        invoice.due_date }} - {% if invoice.is_paid %}Paid{% else %}Unpaid{%
+        endif %}
+      </li>
+      {% empty %}
+      <li>No invoices.</li>
+      {% endfor %}
+    </ul>
+
+    <h3>Your Payments</h3>
+    <ul>
+      {% for payment in payments %}
+      <li>
+        Paid {{ payment.amount }} for {{ payment.invoice.description }} on {{
+        payment.date|date:"Y-m-d" }}
+      </li>
+      {% empty %}
+      <li>No payments yet.</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

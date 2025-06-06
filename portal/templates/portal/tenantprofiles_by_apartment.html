@@ -1,0 +1,22 @@
+{% extends "portal/base.html" %}
+{% block content %}
+<h2>Tenants in {{ apartment.name }} ({{ apartment.address }})</h2>
+<table class="table table-dark table-hover">
+    <thead>
+        <tr>
+            <th>Tenant Name</th>
+            <th>Bedsitter Number</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for tenant in tenants %}
+        <tr>
+            <td>{{ tenant.user.get_full_name|default:tenant.user.username }}</td>
+            <td>{{ tenant.bedsitter.number }}</td>
+            <td>{{ tenant.phone }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

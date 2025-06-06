@@ -2,16 +2,18 @@
 {% block title %}Bedsitters List - SunSet Apartment{% endblock %}
 
 {% block content %}
-<h2 class="mb-4"><i class="fa-solid fa-house"></i> Bedsitters by Apartment</h2>
+<div class="card">
+  <h2 class="mb-4"><i class="fa-solid fa-house"></i> Bedsitters by Apartment</h2>
+</div>
 
 {% for apartment in apartments %}
-  <div class="card mb-4">
-    <div class="card-header bg-secondary text-white">
+  <div class="card mb-4 bg-dark">
+    <div class="card-header bg-secondary text-dark">
       <h5 class="mb-0">{{ apartment.name }} <small class="text-light">({{ apartment.address }})</small></h5>
     </div>
     <div class="card-body">
       {% if apartment.available_bedsitters %}
-        <table class="table table-hover">
+        <table class="table table-hover table-dark">
           <thead>
             <tr>
               <th>Bedsitter Number</th>

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Invoice, Payment, Tenantprofile, Apartment
 
@@ -34,9 +34,6 @@ def apartments_list(request):
     context = {'apartments': apartments}
     return render(request, 'portal/apartments_list.html', context)
 
-def dashboard(request):
-    return render(request, 'portal/dashboard.html')
-
 def bedsitters_list(request):
     apartments = Apartment.objects.prefetch_related('bedsitters').all()
     # For each apartment, filter bedsitters that are available
@@ -45,3 +42,21 @@ def bedsitters_list(request):
 
     context = {'apartments': apartments}
     return render(request, 'portal/bedsitters_list.html', context)
+
+def apartment_bedsitters(request, apartment_id):
+    apartment = get_object_or_404(Apartment, id=apartment_id)
+    bedsitters = apartment.bedsitters.all().select_related('tenantprofile')
+    context = {
+        'apartment': apartment,
+        'bedsitters': bedsitters,
+    }
+    return render(request, 'portal/apartment_bedsitters.html', context)
+
+def tenant_apartment_select(request):
+    apartments = Apartment.objects.all()
+    return render(request, 'portal/tenant_apartment_select.html', {'apartments': apartments})
+
+def tenantprofiles_by_apartment(request, apartment_id):
+    apartment = get_object_or_404(Apartment, id=apartment_id)
+    tenants = Tenantprofile.objects.filter(bedsitter__apartment=apartment).select_related('user', 'bedsitter')
+    return render(request, 'portal/tenantprofiles_by_apartment.html', {'apartment': apartment, 'tenants': tenants})

@@ -1,7 +1,9 @@
 {% extends "portal/base.html" %}
 {% block content %}
-<div  class=" card text-bg-dark">
-  <h2>Select Apartment</h2>
+<div class="card shadow bg-dark">
+  <div class="card-header bg-dark text-white">
+    <p class="fs-3">Welcome, {{ request.user.username }}</p>
+  </div>
   <ul>
     {% for apt in apartments %}
       <li >
@@ -13,6 +15,6 @@
       </a>
       </li>
     {% endfor %}
-</ul>
+  </ul>
 </div>
 {% endblock %}

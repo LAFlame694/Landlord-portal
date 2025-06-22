@@ -1,0 +1,36 @@
+{% extends "portal/base.html" %}
+
+{% block content %}
+<div class="card shadow bg-dark">
+    <div class="card-header bg-dark text-white">
+        <p class="fs-3">Welcome, {{ request.user.username }}</p>
+    </div>
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th><span class="badge bg-primary fs-4">ID</span></th>
+                <th><span class="badge bg-primary fs-4">Tenant</span></th>
+                <th><span class="badge bg-primary fs-4">Receipt Number</span></th>
+                <th><span class="badge bg-primary fs-4">Payment</span></th>
+                <th><span class="badge bg-primary fs-4">Date</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for receipt in receipts %}
+            <tr>
+                <td>{{ receipt.id }}</td>
+                <td>{{ receipt.tenant }}</td>
+                <td>{{ receipt.receipt_number }}</td>
+                <td>{{ receipt.payment }}</td>
+                <td>{{ receipt.date_issued }}</td>
+                <!-- Add more fields as needed -->
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No receipts found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,14 +1,15 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Invoice, Payment, Tenantprofile, Apartment, Bedsitter
+from .models import Invoice, Payment, TenantProfile, Apartment, Bedsitter, Receipt
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from .forms import TenantProfileForm, CustomUserCreationForm 
 
 # Create your views here.
 @login_required
 def tenant_dashboard(request):
     # each user has one tenant profile
-    tenant_profile = Tenantprofile.objects.get(user=request.user)
+    tenant_profile = TenantProfile.objects.get(user=request.user)
     invoices = Invoice.objects.filter(tenant=tenant_profile)
     payments = Payment.objects.filter(tenant=tenant_profile)
     context = {
@@ -21,13 +22,26 @@ def tenant_dashboard(request):
 @user_passes_test(lambda u: u.is_superuser)
 def admin_dashboard(request):
     # show all tenants and summery
-    tenants = Tenantprofile.objects.all()
+    tenants = TenantProfile.objects.all()
     invoices = Invoice.objects.all()
     payments = Payment.objects.all()
+    total_tenants = tenants.count()
+    total_apartments = Apartment.objects.count()
+    pending_invoices = Invoice.objects.filter(is_paid=False)
+    recent_invoices = Invoice.objects.order_by('-id')[:3]
+    apartment = Apartment.objects.all()
+    recent_payments = Payment.objects.select_related('tenant', 'invoice').order_by('-date')[:5]
+
     context = {
         "tenants": tenants,
         "invoices": invoices,
         "payments": payments,
+        "total_tenants": total_tenants,
+        "total_apartments": total_apartments,
+        "pending_invoices": pending_invoices,
+        "recent_invoices": recent_invoices,
+        "apartment": apartment,
+        'recent_payments': recent_payments,
     }
     return render(request, "portal/admin_dashboard.html", context)
 
@@ -60,7 +74,7 @@ def tenant_apartment_select(request):
 
 def tenantprofiles_by_apartment(request, apartment_id):
     apartment = get_object_or_404(Apartment, id=apartment_id)
-    tenants = Tenantprofile.objects.filter(bedsitter__apartment=apartment).select_related('user', 'bedsitter')
+    tenants = TenantProfile.objects.filter(bedsitter__apartment=apartment).select_related('user', 'bedsitter')
     return render(request, 'portal/tenantprofiles_by_apartment.html', {'apartment': apartment, 'tenants': tenants})
 
 @csrf_exempt
@@ -81,7 +95,7 @@ def mpesa_c2b_confirmation(request):
             print(f"Bedsitter found: {bedsitter_number}")
 
             # Find the tenant profile living in this bedsitter
-            tenant = Tenantprofile.objects.get(bedsitter = bedsitter)
+            tenant = TenantProfile.objects.get(bedsitter = bedsitter)
             print(f"Tenant found: {tenant}")
 
             # Find the first unpaid invoice for this tenant with the matching amount
@@ -104,7 +118,7 @@ def mpesa_c2b_confirmation(request):
             # Handle missing bedsitter, tenant, or invoice
             print(f"Bedsitter not found: {bedsitter_number}")
         
-        except Tenantprofile.DoesNotExist:
+        except TenantProfile.DoesNotExist:
             print(f"Tenant not found for bedsitter: {bedsitter_number}")
 
         except Invoice.DoesNotExist:
@@ -133,7 +147,7 @@ def mpesa_c2b_validation(request):
             print(f"Bedsitter found: {bedsitter_number}")
 
             # Check if tenant exists in this bedsitter
-            tenant = Tenantprofile.objects.get(bedsitter=bedsitter)
+            tenant = TenantProfile.objects.get(bedsitter=bedsitter)
             print(f"Tenant found for bedsitter: {tenant}")
 
             # Check for an unpaid invoice for this tenant, matching the amount
@@ -145,7 +159,7 @@ def mpesa_c2b_validation(request):
         except Bedsitter.DoesNotExist:
             print(f"Bedsitter not found: {bedsitter_number}")
 
-        except Tenantprofile.DoesNotExist:
+        except TenantProfile.DoesNotExist:
             print(f"Tenant not found for bedsitter: {bedsitter_number}")
         
         except Invoice.DoesNotExist:
@@ -157,3 +171,35 @@ def mpesa_c2b_validation(request):
     
     print("Validation endpoint: method not allowed")
     return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+def invoice_list(request):
+    invoices = Invoice.objects.all()
+    return render(request, "portal/invoice_list.html", {"invoices": invoices})
+
+def payment_list(request):
+    payments = Payment.objects.all()
+    return render(request, "portal/payment_list.html", {"payments": payments})
+
+def receipt_list(request):
+    receipts = Receipt.objects.all()
+    return render(request, "portal/receipt_list.html", {"receipts": receipts})
+
+def add_tenant(request):
+    if request.method == "POST":
+        form = TenantProfileForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')
+    else:
+        form = TenantProfileForm()
+    return render(request, 'portal/add_tenant.html', {'form':form})
+
+def add_user(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')
+    else:
+            form = CustomUserCreationForm()
+    return render(request, 'portal/add_user.html', {'form': form})

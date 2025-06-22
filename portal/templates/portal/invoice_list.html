@@ -1,0 +1,45 @@
+{% extends "portal/base.html" %} 
+
+{% block content %}
+<div class="card shadow bg-dark">
+  <div class="card-header bg-dark text-white">
+      <p class="fs-3">Welcome, {{ request.user.username }}</p>
+  </div>
+  <table class="table table-hover table-dark">
+    <thead>
+      <tr>
+        <th><span class="badge bg-primary fs-4">ID</span></th>
+        <th><span class="badge bg-primary fs-4">Tenant</span></th>
+        <th><span class="badge bg-primary fs-4">Amount</span></th>
+        <th><span class="badge bg-primary fs-4">Date</span></th>
+        <th><span class="badge bg-primary fs-4">Description</span></th>
+        <th><span class="badge bg-primary fs-4">Is Paid?</span></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for invoice in invoices %}
+      <tr>
+        <td>{{ invoice.id }}</td>
+        <td>{{ invoice.tenant }}</td>
+        <td>{{ invoice.amount }}</td>
+        <td>{{ invoice.due_date }}</td>
+        <td>{{ invoice.description }}</td>
+        <td>
+          {% if invoice.is_paid %}
+          <span style="color: green">Yes</span>
+          {% else %}
+          <span style="color: red">No</span>
+          {% endif %}
+        </td>
+        <td>{{ invoice.created_at }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">No invoices found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

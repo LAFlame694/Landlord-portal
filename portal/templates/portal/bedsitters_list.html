@@ -2,39 +2,41 @@
 {% block title %}Bedsitters List - SunSet Apartment{% endblock %}
 
 {% block content %}
-<div class="card">
-  <h2 class="mb-4"><i class="fa-solid fa-house"></i> Bedsitters by Apartment</h2>
-</div>
+<div class="card shadow bg-dark">
+    <div class="card-header bg-dark text-white">
+      <p class="fs-3">Welcome, {{ request.user.username }}</p>
+    </div>
 
-{% for apartment in apartments %}
-  <div class="card mb-4 bg-dark">
-    <div class="card-header bg-secondary text-dark">
-      <h5 class="mb-0">{{ apartment.name }} <small class="text-light">({{ apartment.address }})</small></h5>
-    </div>
-    <div class="card-body">
-      {% if apartment.available_bedsitters %}
-        <table class="table table-hover table-dark">
-          <thead>
-            <tr>
-              <th>Bedsitter Number</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for bedsitter in apartment.available_bedsitters %}
+  {% for apartment in apartments %}
+    <div class="card mb-4 bg-dark">
+      <div class="card-header bg-secondary text-dark">
+        <h5 class="mb-0">{{ apartment.name }} <small class="text-light">({{ apartment.address }})</small></h5>
+      </div>
+      <div class="card-body">
+        {% if apartment.available_bedsitters %}
+          <table class="table table-hover table-dark">
+            <thead>
               <tr>
-                <td>{{ bedsitter.number }}</td>
-                <td><span class="badge bg-success">Available</span></td>
+                <th><span class="badge bg-primary fs-4">Bedsitter Number</span></th>
+                <th><span class="badge bg-primary fs-4">Status</span></th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <p class="text-muted">No available bedsitters in this apartment.</p>
-      {% endif %}
+            </thead>
+            <tbody>
+              {% for bedsitter in apartment.available_bedsitters %}
+                <tr>
+                  <td>{{ bedsitter.number }}</td>
+                  <td><span class="badge bg-success">Available</span></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="text-muted">No available bedsitters in this apartment.</p>
+        {% endif %}
+      </div>
     </div>
-  </div>
-{% empty %}
-  <p>No apartments found.</p>
-{% endfor %}
+  {% empty %}
+    <p>No apartments found.</p>
+  {% endfor %}
+</div>
 {% endblock %}

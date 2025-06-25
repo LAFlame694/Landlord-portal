@@ -1,38 +1,44 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Tenant Dashboard</title>
-  </head>
-  <body>
-    <h1>
-      Welcome, {{
-      tenant_profile.user.get_full_name|default:tenant_profile.user.username }}!
-    </h1>
-    <h2>Your BedSitter: {{ tenant_profile.bedsitter }}</h2>
+{% extends "portal/base_tenant.html" %}
+{% block title %}Tenant Dashboard{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3>Welcome, {{ tenant_profile.user.get_full_name|default:tenant_profile.user.username }}</h3>
+            <p>
+                Bedsitter: {{ tenant_profile.bedsitter.number }}<br>
+                Apartment: {{ tenant_profile.bedsitter.apartment.name }}
+            </p>
+            <p>
+                Phone: {{ tenant_profile.phone }}
+            </p>
+        </div>
+        <div class="card-body">
+            <h4>Your Invoices</h4>
+            <ul class="list-group mb-4">
+                {% for invoice in invoices %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ invoice.description }} - {{ invoice.amount }} KES
+                        <span class="badge {% if invoice.is_paid %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                            {% if invoice.is_paid %}Paid{% else %}Unpaid{% endif %}
+                        </span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No invoices found.</li>
+                {% endfor %}
+            </ul>
 
-    <h3>Current Invoices</h3>
-    <ul>
-      {% for invoice in invoices %}
-      <li>
-        {{ invoice.description }} - Amount: {{ invoice.amount }} - Due: {{
-        invoice.due_date }} - {% if invoice.is_paid %}Paid{% else %}Unpaid{%
-        endif %}
-      </li>
-      {% empty %}
-      <li>No invoices.</li>
-      {% endfor %}
-    </ul>
-
-    <h3>Your Payments</h3>
-    <ul>
-      {% for payment in payments %}
-      <li>
-        Paid {{ payment.amount }} for {{ payment.invoice.description }} on {{
-        payment.date|date:"Y-m-d" }}
-      </li>
-      {% empty %}
-      <li>No payments yet.</li>
-      {% endfor %}
-    </ul>
-  </body>
-</html>
+            <h4>Your Payments</h4>
+            <ul class="list-group mb-4">
+                {% for payment in payments %}
+                    <li class="list-group-item">
+                        Paid {{ payment.amount }} KES for {{ payment.invoice.description }} on {{ payment.date|date:"Y-m-d" }}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No payments found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

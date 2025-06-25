@@ -1,9 +1,9 @@
 {% extends "portal/base.html" %}
-{% block title %}Add New Tenant{% endblock %}
+{% block title %}Add New Bedsitter{% endblock %}
 {% block content %}
 <div class="card shadow bg-dark text-white p-4 d-flex justify-content-center align-items-center">
     <div class="w-100" style="max-width: 600px;">
-        <h2>Add New Tenant</h2>
+        <h2>Add New Bedsitter</h2>
         <form method="post">
             {% csrf_token %}
             {% for field in form %}
@@ -18,7 +18,7 @@
                 </div>
             {% endfor %}
             <div class="text-end">
-                <button type="submit" class="btn btn-success">Add Tenant</button>
+                <button type="submit" class="btn btn-success">Add Bedsitter</button>
             </div>
         </form>
     </div>

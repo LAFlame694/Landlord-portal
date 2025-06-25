@@ -1,10 +1,10 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from .views import RoleBasedLoginView
 
 urlpatterns = [
     path('', views.admin_dashboard, name='index'),
-    path('tenant/dashboard/', views.tenant_dashboard, name='tenant_dashboard'),
     path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('apartments/', views.apartments_list, name='apartments_list'),
     path('bedsitters/', views.bedsitters_list, name='bedsitters_list'),
@@ -15,8 +15,14 @@ urlpatterns = [
     path('invoices/', views.invoice_list, name='invoice_list'),
     path('payments/', views.payment_list, name='payment_list'),
     path('receipts/', views.receipt_list, name='receipt_list'),
-    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('login/', RoleBasedLoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('add-tenant/', views.add_tenant, name='add_tenant'),
     path('add-user/', views.add_user, name='add_user'),
+    path('add-invoice/', views.add_invoice, name='add_invoice'),
+    path('add-apartment/', views.add_apartment, name='add_apartment'),
+    path('add-bedsitter/', views.add_bedsitter, name='add_bedsitter'),
+    
+    #---tenant dashboard---#
+    path('tenant/dashboard/', views.tenant_dashboard, name='tenant_dashboard'),
 ]

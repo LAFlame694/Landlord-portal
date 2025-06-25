@@ -1,24 +1,24 @@
 {% extends "portal/base.html" %}
-{% block title %}Add New Tenant{% endblock %}
+{% block title %}Add Apartment{% endblock %}
 {% block content %}
 <div class="card shadow bg-dark text-white p-4 d-flex justify-content-center align-items-center">
     <div class="w-100" style="max-width: 600px;">
-        <h2>Add New Tenant</h2>
+        <h2>Add New Apartment</h2>
         <form method="post">
             {% csrf_token %}
             {% for field in form %}
                 <div class="mb-3 align-items-center">
-                    <label class="col-sm-3 col-form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <label class="col-sm-3 col-form-label" for="{{ field.id_for_label }}">{{field.label}}</label>
                     <div class="col-sm-9">
                         {{ field }}
                         {% for error in field.errors %}
-                            <div class="text-danger">{{ error }}</div>
+                            <div class="text-danger">{{error}}</div>
                         {% endfor %}
                     </div>
                 </div>
             {% endfor %}
             <div class="text-end">
-                <button type="submit" class="btn btn-success">Add Tenant</button>
+                <button type="submit" class="btn btn-success">Add</button>
             </div>
         </form>
     </div>

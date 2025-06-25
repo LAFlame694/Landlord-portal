@@ -59,8 +59,9 @@
     <div>
       <a href="{% url 'add_tenant' %}" class="btn btn-success">+ Add New Tenant</a>
       <a href="{% url 'add_user' %}" class="btn btn-primary">+ Add User</a>
-      <a href="#" class="btn btn-warning">+ Create Invoice</a>
-      <a href="#" class="btn btn-info">+ Add Apartment</a>
+      <a href="{% url 'add_invoice' %}" class="btn btn-warning">+ Create Invoice</a>
+      <a href="{% url 'add_apartment' %}" class="btn btn-info">+ Add Apartment</a>
+      <a href="{% url 'add_bedsitter' %}" class="btn btn-success">+ Add New Bedsitter</a>
     </div>
   </div>
 </div>

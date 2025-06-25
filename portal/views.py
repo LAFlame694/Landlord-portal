@@ -3,15 +3,31 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Invoice, Payment, TenantProfile, Apartment, Bedsitter, Receipt
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .forms import TenantProfileForm, CustomUserCreationForm 
+from .forms import TenantProfileForm, CustomUserCreationForm, InvoiceForm, ApartmentForm, BedsitterForm
+from django.contrib.auth.views import LoginView
+
+class RoleBasedLoginView(LoginView):
+    def get_success_url(self):
+        user = self.request.user
+        if user.is_superuser or user.is_staff:
+            return '/admin_dashboard/'
+        elif hasattr(user, 'tenantprofile'):
+            return '/tenant/dashboard/'
+        else:
+            return '/'
 
 # Create your views here.
 @login_required
 def tenant_dashboard(request):
     # each user has one tenant profile
-    tenant_profile = TenantProfile.objects.get(user=request.user)
-    invoices = Invoice.objects.filter(tenant=tenant_profile)
-    payments = Payment.objects.filter(tenant=tenant_profile)
+    try:
+        tenant_profile = TenantProfile.objects.select_related('bedsitter').get(user=request.user)
+    except TenantProfile.DoesNotExist:
+        return redirect('login')
+    
+    invoices = Invoice.objects.filter(tenant=tenant_profile).order_by('-is_paid')
+    payments = Payment.objects.filter(tenant=tenant_profile).order_by('-date')
+
     context = {
         "tenant_profile": tenant_profile,
         "invoices": invoices,
@@ -203,3 +219,33 @@ def add_user(request):
     else:
             form = CustomUserCreationForm()
     return render(request, 'portal/add_user.html', {'form': form})
+
+def add_invoice(request):
+    if request.method == "POST":
+        form = InvoiceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')
+    else:
+        form = InvoiceForm()
+    return render(request, 'portal/add_invoice.html', {'form':form})
+
+def add_apartment(request):
+    if request.method == "POST":
+        form = ApartmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')
+    else:
+        form = ApartmentForm()
+    return render(request, 'portal/add_apartment.html', {'form':form})
+
+def add_bedsitter(request):
+    if request.method == "POST":
+        form = BedsitterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')
+    else:
+        form = BedsitterForm()
+    return render(request, 'portal/add_bedsitter.html', {'form':form})

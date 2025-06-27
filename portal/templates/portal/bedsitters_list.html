@@ -3,13 +3,13 @@
 
 {% block content %}
 <div class="card shadow bg-dark">
-    <div class="card-header bg-dark text-white">
-      <p class="fs-3">Welcome, {{ request.user.username }}</p>
+    <div>
+      <a href="{% url 'add_bedsitter' %}" class="btn btn-success"><i class="fa-solid fa-plus fa-lg"></i> Add New Bedsitter</a>
     </div>
 
   {% for apartment in apartments %}
     <div class="card mb-4 bg-dark">
-      <div class="card-header bg-secondary text-dark">
+      <div class="text-bg-dark">
         <h5 class="mb-0">{{ apartment.name }} <small class="text-light">({{ apartment.address }})</small></h5>
       </div>
       <div class="card-body">
@@ -17,8 +17,8 @@
           <table class="table table-hover table-dark">
             <thead>
               <tr>
-                <th><span class="badge bg-primary fs-4">Bedsitter Number</span></th>
-                <th><span class="badge bg-primary fs-4">Status</span></th>
+                <th><span class="badge bg-primary fs-6">Bedsitter Number</span></th>
+                <th><span class="badge bg-primary fs-6">Status</span></th>
               </tr>
             </thead>
             <tbody>

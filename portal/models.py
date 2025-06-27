@@ -25,6 +25,7 @@ class TenantProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bedsitter = models.OneToOneField(Bedsitter, on_delete=models.SET_NULL, null=True, blank=True)
     phone = models.CharField(max_length=255)
+    apartment = models.OneToOneField(Apartment, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.user.get_full_name() or self.user.username

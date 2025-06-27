@@ -1,9 +1,9 @@
 import requests
 
-access_token = "T1ANIHHS27QOCKQeHxAbIX2r3GkE"
+access_token = "1HvTX02hgdtd53LObKCzJcwVgxjN"
 
-confirmation_url = "https://e7c0-197-248-199-199.ngrok-free.app/payment/c2b/confirmation/"
-validation_url = "https://e7c0-197-248-199-199.ngrok-free.app/payment/c2b/validation/"
+confirmation_url = "https://2d17-197-248-199-199.ngrok-free.app/payment/c2b/confirmation/"
+validation_url = "https://2d17-197-248-199-199.ngrok-free.app/payment/c2b/validation/"
 
 # Use 600999 for sandbox, your own shortcode for production
 shortcode = "600999"

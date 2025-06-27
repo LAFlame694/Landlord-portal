@@ -1,6 +1,6 @@
 import requests
 
-access_token = "T1ANIHHS27QOCKQeHxAbIX2r3GkE"  # Use the same token
+access_token = "1HvTX02hgdtd53LObKCzJcwVgxjN"  # Use the same token
 
 headers = {
     "Authorization": f"Bearer {access_token}",
@@ -10,9 +10,9 @@ headers = {
 data = {
     "ShortCode": "600999",  # Sandbox shortcode
     "CommandID": "CustomerPayBillOnline",
-    "Amount": "100",  # Use an amount matching an unpaid invoice for a tenant
+    "Amount": "1000",  # Use an amount matching an unpaid invoice for a tenant
     "Msisdn": "254708374149",  # Test number (always this for sandbox)
-    "BillRefNumber": "A1"  # Bedsitter number
+    "BillRefNumber": "H1"  # Bedsitter number
 }
 
 url = "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/simulate"

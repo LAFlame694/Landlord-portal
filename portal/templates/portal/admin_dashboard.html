@@ -6,7 +6,7 @@
   <div class="card-header bg-dark text-white">
     <p class="fs-3">Welcome, {{ request.user.username }}</p>
   </div>
-    <div class="card-body">
+  <div class="card-body">
     <div class="row mb-4">
       <div class="col-md-4">
         <div class="card border-secondary text-center bg-secondary mb-3">
@@ -57,11 +57,9 @@
         {% endfor %}
       </ul>
     <div>
-      <a href="{% url 'add_tenant' %}" class="btn btn-success">+ Add New Tenant</a>
-      <a href="{% url 'add_user' %}" class="btn btn-primary">+ Add User</a>
-      <a href="{% url 'add_invoice' %}" class="btn btn-warning">+ Create Invoice</a>
-      <a href="{% url 'add_apartment' %}" class="btn btn-info">+ Add Apartment</a>
-      <a href="{% url 'add_bedsitter' %}" class="btn btn-success">+ Add New Bedsitter</a>
+      <a href="{% url 'add_tenant' %}" class="btn btn-success"><i class="fa-solid fa-plus fa-lg"></i> Add New Tenant</a>
+      <a href="{% url 'add_user' %}" class="btn btn-success"><i class="fa-solid fa-plus fa-lg"></i> Add User</a>
+      <a href="{% url 'add_invoice' %}" class="btn btn-success"><i class="fa-solid fa-plus fa-lg"></i> Create Invoice</a>
     </div>
   </div>
 </div>

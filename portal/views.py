@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .forms import TenantProfileForm, CustomUserCreationForm, InvoiceForm, ApartmentForm, BedsitterForm
 from django.contrib.auth.views import LoginView
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse, Http404
 
 class RoleBasedLoginView(LoginView):
     def get_success_url(self):
@@ -224,6 +226,12 @@ def add_invoice(request):
     if request.method == "POST":
         form = InvoiceForm(request.POST)
         if form.is_valid():
+            invoice = form.save(commit=False)
+            tenant = invoice.tenant #--- the selelcted tenant profile ---#
+
+            #--- Get the apartment for this tenant ---#
+            invoice.apartment = tenant.apartment
+
             form.save()
             return redirect('admin_dashboard')
     else:
@@ -249,3 +257,5 @@ def add_bedsitter(request):
     else:
         form = BedsitterForm()
     return render(request, 'portal/add_bedsitter.html', {'form':form})
+
+    
